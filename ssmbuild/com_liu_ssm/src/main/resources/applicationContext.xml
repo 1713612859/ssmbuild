@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+         http://www.springframework.org/schema/context
+          http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!--扫描com.liu以下包及其子包 但不包括  被org.springframework.stereotype.Controller所进行注解使用的-->
+    <context:component-scan base-package="com.liu">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+    <!--引入数据源DruidDataSource   注册为bean bean的名称为dataSource id 唯一 默认单例 singleton  -->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://localhost:3306/test?characterEncoding=utf-8"/>
+        <property name="username" value="root"/>
+        <property name="password" value="123lyl"/>
+    </bean>
+
+    <!--定义Bean 类型为SqlSessionFactoryBean 里面引入了上面的数据源 -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!--mapper扫描包  com/liu/mapper  扫描之后， spring容器管理bean 因为spring容器有个beanFactory-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!--扫描包-->
+        <property name="basePackage" value="com/liu/mapper"/>
+    </bean>
+</beans>

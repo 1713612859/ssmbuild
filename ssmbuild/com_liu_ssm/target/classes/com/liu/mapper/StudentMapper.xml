@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--命名空间必须得和你的mapper层相对应-->
+<mapper namespace="com.liu.mapper.StudentMapper">
+
+    <!--标签的ID 必须与方法相对应   keyProperty为主键 指定名称为id   useGeneratedKeys 可以理解成为自增  -->
+    <insert id="insert" parameterType="com.liu.domain.Student" keyProperty="id" useGeneratedKeys="true">
+        insert into student values (null,#{username},#{phone},#{address})
+    </insert>
+
+
+    <update id="update" parameterType="com.liu.domain.Student">
+        update student set username= #{username},phone= #{phone},address= #{address} where id =#{id}
+    </update>
+
+    <delete id="delete" parameterType="integer">
+        delete  from student where id =#{id}
+    </delete>
+
+    <select id="getAll" resultType="com.liu.domain.Student">
+        select * from student order by id  desc
+    </select>
+    <select id="findById" resultType="com.liu.domain.Student">
+        select  * from student where id =#{id}
+    </select>
+
+
+    <select id="findLikeUsername" parameterType="String" resultType="com.liu.domain.Student">
+        select * from student
+        <where>
+            <if test="username !=null and username!=''">
+                and  username like concat('%',#{username},'%')
+            </if>
+
+            <if test="phone !=null and phone!=''">
+                and  phone like concat('%',#{phone},'%')
+            </if>
+        </where>
+    </select>
+</mapper>
